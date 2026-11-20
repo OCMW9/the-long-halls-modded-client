@@ -131,11 +131,27 @@ html,body{margin:0;background:#000}
      1. files next to this page   2. raw.githubusercontent.com   3. cdn.jsdelivr.net (GitHub mirror)
    A source is used only if ALL files load from it, so versions never get mixed. */
 (function(){
- var USER='AniItsukiCoded',REPO='The-Long-Hall',BR='main';
- var SOURCES=[
-  /* Modded client assets must load from this copy, never silently fall back to the unmodified public game. */
-  {n:'this client',u:function(p){return new URL(p,document.baseURI).href},ok:function(){try{var u=new URL(document.baseURI);return u.protocol==='http:'||u.protocol==='https:'}catch(e){return false}}}
- ];
+var BASE='https://ocmw9.github.io/the-long-halls-modded-client/';
+
+var SOURCES=[
+  {
+    n:'GitHub Pages',
+    u:function(p){return new URL(p,BASE).href},
+    ok:function(){return true}
+  },
+  {
+    n:'this client',
+    u:function(p){return new URL(p,document.baseURI).href},
+    ok:function(){
+      try {
+        var u=new URL(document.baseURI);
+        return u.protocol==='http:'||u.protocol==='https:';
+      } catch(e) {
+        return false;
+      }
+    }
+  }
+];
  /* [path, approx bytes (for the progress bar), kind]  -  injected in this order */
  var FILES=[
   ['css/style.css',13000,'css'],['css/mod-menu.css',9000,'css'],
