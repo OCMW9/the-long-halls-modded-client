@@ -131,13 +131,24 @@ html,body{margin:0;background:#000}
      1. files next to this page   2. raw.githubusercontent.com   3. cdn.jsdelivr.net (GitHub mirror)
    A source is used only if ALL files load from it, so versions never get mixed. */
 (function(){
-var BASE='https://ocmw9.github.io/the-long-halls-modded-client/';
+var USER='OCMW9',REPO='the-long-halls-modded-client',BR='main';
 
 var SOURCES=[
   {
     n:'GitHub Pages',
-    u:function(p){return new URL(p,BASE).href},
-    ok:function(){return true}
+    u:function(p){return new URL(p,'https://ocmw9.github.io/the-long-halls-modded-client/').href}
+  },
+  {
+    n:'GitHub Raw',
+    u:function(p){
+      return 'https://raw.githubusercontent.com/'+USER+'/'+REPO+'/'+BR+'/'+p;
+    }
+  },
+  {
+    n:'jsDelivr',
+    u:function(p){
+      return 'https://cdn.jsdelivr.net/gh/'+USER+'/'+REPO+'@'+BR+'/'+p;
+    }
   },
   {
     n:'this client',
