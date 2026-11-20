@@ -189,15 +189,18 @@ var SOURCES=[
  var got=0;
  function bump(n){got+=n;stage('files',Math.min(.99,got/TOTAL))}
  function fetchText(url){
-  return fetch(url,{credentials:'omit'}).then(function(r){
-   if(!r.ok)throw new Error(r.status+' '+url);
-   if(!r.body||!r.body.getReader)return r.text().then(function(t){bump(t.length);return t});
-   var rd=r.body.getReader(),parts=[];
-   return (function pump(){return rd.read().then(function(x){if(x.done)return;parts.push(x.value);bump(x.value.length);return pump()})})().then(function(){
-    var len=0;parts.forEach(function(p){len+=p.length});var all=new Uint8Array(len),o=0;parts.forEach(function(p){all.set(p,o);o+=p.length});
-    return new TextDecoder('utf-8').decode(all)})
-  }).then(function(t){if(/^\s*</.test(t.slice(0,200)))throw new Error('got HTML instead of a file: '+url);return t})
- }
+  return fetch(url,{credentials:'omit'})
+    .then(function(r){
+      if(!r.ok)throw new Error(r.status+' '+url);
+      return r.text();
+    })
+    .then(function(t){
+      if(/^\s*</.test(t.slice(0,200)))
+        throw new Error('got HTML instead of a file: '+url);
+      bump(t.length);
+      return t;
+    });
+}
  function firstOk(urls){var i=0;return (function next(){if(i>=urls.length)return Promise.reject(new Error('could not load '+urls[0]));return fetchText(urls[i++]).catch(next)})()}
  function loadSet(src){got=0;return Promise.all(FILES.map(function(f){return Promise.resolve().then(function(){return fetchText(src.u(f[0]))})}))}
  function loadAll(){
